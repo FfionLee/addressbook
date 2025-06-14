@@ -1,8 +1,57 @@
 from tkinter import *
+from tkinter.filedialog import *
 
 ui=Tk()
 ui.config(background='SteelBlue')
 ui.geometry('500x500')
+
+addressbook={}
+
+def addfun():
+    key=namin.get()
+    addressbook[key]=(addressin.get(),phonein.get(),emailin.get(),bdayin.get())
+    list.insert(END,key)
+    clearall()
+
+def clearall():
+    namin.delete(0,END)
+    addressin.delete(0,END)
+    phonein.delete(0,END)
+    emailin.delete(0,END)
+    bdayin.delete(0,END)
+
+def edit():
+    global addressbook
+    clearall()
+    index=list.curselection()
+    key=list.get(index)
+    namin.insert(0,key)
+    addressin.insert(0,addressbook[key][0])
+    phonein.insert(0,addressbook[key][1])
+    emailin.insert(0,addressbook[key][2])
+    bdayin.insert(0,addressbook[key][3]) 
+
+def display(event):
+    global addressbook
+    window=Toplevel(ui)
+    details=Label(window)
+    index=list.curselection()
+    key=list.get(index)
+    content='Name: '+key+'\n'+'Address: '+addressbook[key][0]+'\n'+'Phone No.: '+addressbook[key][1]+'\n'+'Email: '+addressbook[key][2]+'\n'+'Birthday: '+addressbook[key][3]
+    details.config(text=content)
+    details.pack()
+
+def delete():
+    index=list.curselection()
+    key=list.get(index)
+    list.delete(index)
+    del addressbook[key]
+    print(addressbook)
+
+def save():
+    global addressbook
+    f=asksaveasfile(defaultextension='txt')
+    print(addressbook,file=f)
 
 title=Label(ui,text='Address Book',bg='SteelBlue',fg='white',font='TkDefaultFont 20')
 title.pack(pady=20)
@@ -40,11 +89,18 @@ bdayin.grid(column=1,row=4)
 
 list=Listbox(ui,width=40)
 list.place(x=10,y=120)
+list.bind('<<ListboxSelect>>',display)
 
-editb=Button(ui,text='EDIT')
+editb=Button(ui,text='EDIT',command=edit)
 editb.place(x=50,y=300)
 
-delb=Button(ui,text='DELETE')
-delb.place(x=200,y=300)
+delb=Button(ui,text='DELETE',command=delete)
+delb.place(x=150,y=300)
+
+addb=Button(ui,text='ADD',command=addfun)
+addb.place(x=350,y=300)
+
+saveb=Button(ui,text='SAVE',command=save)
+saveb.place(x=450,y=300)
 
 ui.mainloop()
