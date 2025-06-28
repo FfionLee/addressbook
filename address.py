@@ -53,10 +53,19 @@ def save():
     f=asksaveasfile(defaultextension='txt')
     print(addressbook,file=f)
 
+def open():
+    file=askopenfile()
+    addressbook=eval(file.read())
+    print(addressbook)
+    for i in addressbook.keys():
+        list.insert(END,i)
+        print(i)
+    print(addressbook.keys())
+
 title=Label(ui,text='Address Book',bg='SteelBlue',fg='white',font='TkDefaultFont 20')
 title.pack(pady=20)
 
-openb=Button(ui,text='OPEN')
+openb=Button(ui,text='OPEN',command=open)
 openb.pack()
 
 frame=Frame(ui,bg='SteelBlue')
